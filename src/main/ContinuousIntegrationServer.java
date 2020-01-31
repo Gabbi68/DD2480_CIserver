@@ -4,13 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import javax.tools.*;
-import java.io.File;
+import java.io.*;
 import java.lang.Object;
+import java.util.*;
 
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 /*
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -50,10 +51,15 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     public static void main(String[] args) throws Exception
     {
 
+        /* COMPILE TESTS
         ContinuousIntegrationServer run = new ContinuousIntegrationServer();
-
         run.build("C:\\Users\\Martin\\testCompile", "HelloWorld.java");
 
+*/
+        ContinuousIntegrationServer run = new ContinuousIntegrationServer();
+        run.getProjectFromGIT("https://github.com/Gabbi68/HelloWorld.git","master" , "C:\\Users\\Martin\\testCompile\\HelloWorld");
+        TimeUnit.SECONDS.sleep(3);
+        run.build("C:\\Users\\Martin\\testCompile\\HelloWorld", "HelloWorld.java");
 
        /*
         Server server = new Server(8080);
@@ -92,6 +98,21 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     }
 
 
-    public void toFile(){}
+    public void toFile(String commandToRun) throws Exception {
+
+    }
+
+    public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath){
+
+        try {
+            Runtime rt = Runtime.getRuntime();
+            rt.exec("cmd.exe /c start git clone -branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File("C:\\Users\\Martin")); //TODO make dynamic
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
 
 }
