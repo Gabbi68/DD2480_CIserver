@@ -106,7 +106,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
         try {
             Runtime rt = Runtime.getRuntime();
-            rt.exec("cmd.exe /c start git clone -branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File("C:\\Users\\Martin")); //TODO make dynamic
+            rt.exec("cmd.exe /c start git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File("C:\\Users\\Martin")); //TODO make dynamic
 
         }catch (IOException e){
             e.printStackTrace();
