@@ -9,6 +9,7 @@ import java.io.IOException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.json.*;
 
 /**
  Skeleton of a main.ContinuousIntegrationServer which acts as webhook
@@ -16,6 +17,9 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  */
 public class ContinuousIntegrationServer extends AbstractHandler
 {
+    public static String clone_url;
+    public static String branch;
+
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -58,11 +62,27 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     public void getProjectFormGIT(){}
 
-    public void jsonParser(){
+    public void jsonParser(String str){
+      if (!isJsonString(str)) return;
+      JSONObject obj = new JSONObject(str);
+      JSONObject repo = obj.getJSONObject("repository");
+      clone_url = repo.getString("clone_url");
+      String[] ref = string.split("/");
+      branch = ref[ref.length - 1];
+    }
 
+    public boolean IsJsonString(str) {
+      try {
+          JSON.parse(str);
+      } catch (e) {
+          return false;
+      }
+      return true;
     }
 
 
-    public void toFile(){}
+    public void toFile() {
+
+    }
 
 }
