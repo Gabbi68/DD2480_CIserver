@@ -23,6 +23,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 {
     public static String clone_url;
     public static String branch;
+    public static String email;
     public static String sha;
 
     public void handle(String target,
@@ -70,11 +71,12 @@ public class ContinuousIntegrationServer extends AbstractHandler
     public void jsonParser(String str){
       if (!isJsonString(str)) return;
       JSONObject obj = new JSONObject(str);
-      JSONObject repo = obj.getJSONObject("repository");
-      clone_url = repo.getString("clone_url");
-      String[] ref = string.split("/");
+      clone_url = obj.getJSONObject("repository").getString("clone_url");
+      String ref = obj.getString("ref");
+      String[] refpath = ref.split("/");
       branch = ref[ref.length - 1];
       sha = obj.getString("after");
+      email = obj.getJSONObject("pusher").getString("email");
     }
 
     public boolean IsJsonString(str) {
