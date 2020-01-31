@@ -11,6 +11,10 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.json.*;
 
+import java.io.PrintWriter;
+import java.io.File;
+import java.nio.file.Files;
+
 /**
  Skeleton of a main.ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
@@ -19,6 +23,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 {
     public static String clone_url;
     public static String branch;
+    public static String sha;
 
     public void handle(String target,
                        Request baseRequest,
@@ -69,6 +74,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
       clone_url = repo.getString("clone_url");
       String[] ref = string.split("/");
       branch = ref[ref.length - 1];
+      sha = obj.getString("after");
     }
 
     public boolean IsJsonString(str) {
@@ -81,8 +87,29 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
 
 
-    public void toFile() {
-
+    public void writeToFile() throws IOException {
+      File f = new File("buildHistory.txt");
+      if(!f.exists()) {
+          PrintWriter writer = new PrintWriter("buildHistory.txt", "UTF-8");
+          JSONObject json = new JSONObject();
+          JSONObject info = new JSONObject();
+          info.put("clone_url", clone_url);
+          info.put("branch", branch);
+          json.put(sha, info);
+          return;
+      }
+      if(f.exists() && !f.isDirectory()) {
+        String content = Files.readString("buildHistory.txt");
+        JSONObject json = new JSONObject(content);
+        JSONObject info = new JSONObject();
+        info.put("clone_url", clone_url);
+        info.put("branch", branch);
+        json.put(sha, info);
+        FileWriter fileWriter = new FileWriter("buildHistory.txt");
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.print(json.toString());
+        printWriter.close();
+      }
     }
 
 }
