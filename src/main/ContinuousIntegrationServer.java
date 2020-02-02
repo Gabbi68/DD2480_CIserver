@@ -47,19 +47,12 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
      */
 
+    ArrayList<File> javaFiles = new ArrayList<>();
+
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-
-        /* COMPILE TESTS
-        ContinuousIntegrationServer run = new ContinuousIntegrationServer();
-        run.build("C:\\Users\\Martin\\testCompile", "HelloWorld.java");
-
-*/
-        ContinuousIntegrationServer run = new ContinuousIntegrationServer();
-        run.getProjectFromGIT("https://github.com/Gabbi68/HelloWorld.git","master" , "C:\\Users\\Martin\\testCompile\\HelloWorld");
-        TimeUnit.SECONDS.sleep(3);
-        run.build("C:\\Users\\Martin\\testCompile\\HelloWorld", "HelloWorld.java");
+        
 
        /*
         Server server = new Server(8080);
@@ -70,20 +63,44 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     }
 
 
+    public void build(String souceDIR){
 
-    public void build(String souceDIR, String javaFile){
+        File folder = new File(souceDIR);
+        listFilesForFolder(folder);
 
 
-        String filesTOCompiles = souceDIR + File.separator + javaFile;
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        int compileResult = compiler.run(null,null,null,filesTOCompiles);
 
-        if(compileResult == 0){
-            System.out.println("Compile success");
-        }else {
-            System.out.println("Compile failed");
+        String filesTOCompiles = "";
+        for(File javaFile: javaFiles){
+
+            filesTOCompiles = javaFile.getParent() + java.io.File.separator + javaFile.getName();
+            System.out.println(filesTOCompiles = javaFile.getParent() + java.io.File.separator + javaFile.getName());
+
+            int compileResult = compiler.run(null,null,null, filesTOCompiles);
+            if(compileResult == 0){
+                System.out.println("Compile success");
+            }else {
+                System.out.println("Compile failed");
+            }
+
         }
 
+
+
+    }
+
+
+    public void listFilesForFolder(File folder) {
+        for (File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry);
+            } else {
+                if(fileEntry.getName().endsWith(".java")){
+                    javaFiles.add(fileEntry);
+                }
+            }
+        }
     }
 
 
@@ -104,13 +121,43 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
     public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath){
 
-        try {
-            Runtime rt = Runtime.getRuntime();
-            rt.exec("cmd.exe /c start git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File("C:\\Users\\Martin")); //TODO make dynamic
+        String OS = System.getProperty("os.name").toLowerCase();
 
-        }catch (IOException e){
-            e.printStackTrace();
+
+        if(OS.contains("win")){
+
+            try {
+                Runtime rt = Runtime.getRuntime();
+                rt.exec("cmd.exe /c start git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File(System.getProperty("user.home")));
+
+                TimeUnit.SECONDS.sleep(3);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+        }else if (OS.contains("sunos")){
+
+
+            try {
+                Runtime rt = Runtime.getRuntime();
+                rt.exec("git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File(System.getProperty("user.home")));
+
+                //Needs time to clone as it is a separate process so the code keeps running while the cloning is underway
+                TimeUnit.SECONDS.sleep(3);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
         }
+
+
+
+
 
 
     }
