@@ -3,20 +3,30 @@ package main;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
+import javax.tools.*;
+import java.io.*;
+import java.lang.Object;
+import java.util.*;
 
-import java.io.IOException;
 
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+/*
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.json.*;
 
+
 /**
  Skeleton of a main.ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
  */
-public class ContinuousIntegrationServer extends AbstractHandler
+public class ContinuousIntegrationServer //extends AbstractHandler
 {
+
+
     public static String clone_url;
     public static String branch;
 
@@ -40,19 +50,62 @@ public class ContinuousIntegrationServer extends AbstractHandler
         response.getWriter().println("CI job done");
     }
 
+     */
+
+    ArrayList<File> javaFiles = new ArrayList<>();
+
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
+        
+
+       /*
         Server server = new Server(8080);
         server.setHandler(new ContinuousIntegrationServer());
         server.start();
         server.join();
+        */
     }
 
 
+    public void build(String souceDIR){
 
-    public void build(){
+        File folder = new File(souceDIR);
+        listFilesForFolder(folder);
 
+
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+
+        String filesTOCompiles = "";
+        for(File javaFile: javaFiles){
+
+            filesTOCompiles = javaFile.getParent() + java.io.File.separator + javaFile.getName();
+            System.out.println(filesTOCompiles = javaFile.getParent() + java.io.File.separator + javaFile.getName());
+
+            int compileResult = compiler.run(null,null,null, filesTOCompiles);
+            if(compileResult == 0){
+                System.out.println("Compile success");
+            }else {
+                System.out.println("Compile failed");
+            }
+
+        }
+
+
+
+    }
+
+
+    public void listFilesForFolder(File folder) {
+        for (File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry);
+            } else {
+                if(fileEntry.getName().endsWith(".java")){
+                    javaFiles.add(fileEntry);
+                }
+            }
+        }
     }
 
 
@@ -81,7 +134,45 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
 
 
-    public void toFile() {
+
+    public void toFile(String commandToRun) throws Exception {
+
+    }
+  
+  
+
+    public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath){
+
+        String OS = System.getProperty("os.name").toLowerCase();
+
+
+        if(OS.contains("win")){
+
+            try {
+                Runtime rt = Runtime.getRuntime();
+                rt.exec("cmd.exe /c start git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File(System.getProperty("user.home")));
+
+                TimeUnit.SECONDS.sleep(3);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+        }else if (OS.contains("sunos")){
+
+
+            try {
+                Runtime rt = Runtime.getRuntime();
+                rt.exec("git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File(System.getProperty("user.home")));
+
+                //Needs time to clone as it is a separate process so the code keeps running while the cloning is underway
+                TimeUnit.SECONDS.sleep(3);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
 
     }
 
