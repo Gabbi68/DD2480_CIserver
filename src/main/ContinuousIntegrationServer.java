@@ -61,6 +61,19 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
+       String sourcDIR = "C:\\Users\\Martin\\testCompile\\HelloWorld";
+       String cloneURL = "https://github.com/Gabbi68/HelloWorld.git";
+       String branch = "master";
+
+
+
+        ContinuousIntegrationServer run = new ContinuousIntegrationServer();
+        run.getProjectFromGIT(cloneURL,branch,sourcDIR);
+        run.build(sourcDIR);
+
+        String[] mails = {"nicolai.hellesnes@gmail.com"};
+        SendMail sendMail = new SendMail(mails,run.outputFromCI.toString());
+
 
        /*
         Server server = new Server(8080);
@@ -111,7 +124,8 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
             int compileResult = compiler.run(null,null,output, filesTOCompiles);
             if(compileResult == 0){
-                System.out.println(output.toString());
+                outputFromCI.append("Build successful \n");
+                outputFromCI.append(output.toString());
             }else {
                 outputFromCI.append("Build Failed \n");
                 outputFromCI.append(output.toString());

@@ -10,5 +10,8 @@
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" name="DD2480_CIserver" level="project" />
+    <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
+    <orderEntry type="library" name="jakarta.activation-1.2.1" level="project" />
+    <orderEntry type="library" name="javax.mail-1.6.2" level="project" />
   </component>
 </module>
