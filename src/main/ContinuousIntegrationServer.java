@@ -1,8 +1,8 @@
 package main;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
+//import javax.servlet.ServletException;
 import javax.tools.*;
 import java.io.*;
 import java.lang.Object;
@@ -30,7 +30,8 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     public static String clone_url;
     public static String branch;
 
-    /*public void handle(String target,
+/*
+    public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
                        HttpServletResponse response)
@@ -125,6 +126,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
         //The stream obtains data piped from the error output stream of the process
         BufferedReader error = new BufferedReader(new InputStreamReader(pro.getErrorStream()));
 
+
         String line1 = null;
         String line2 = null;
         while ((line1 = input.readLine()) != null) {
@@ -143,9 +145,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
       }
   }
 
-
     public void getProjectFormGIT(){}
-//Commented it due to missing library imports
 /*
     public void jsonParser(String str){
       if (!isJsonString(str)) return;
