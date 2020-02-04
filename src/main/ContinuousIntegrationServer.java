@@ -30,7 +30,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     public static String clone_url;
     public static String branch;
 
-    public void handle(String target,
+    /*public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
                        HttpServletResponse response)
@@ -57,7 +57,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-        
+
 
        /*
         Server server = new Server(8080);
@@ -110,11 +110,43 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
 
     public void runtests(){
+      String OS = System.getProperty("os.name").toLowerCase();
+      //Runtime re = Runtime.getRuntime();
+      try{
+        Process pro;
+        if(OS.contains("win")){
+          pro = Runtime.getRuntime().exec("cmd.exe /c start java -jar aFile.jar");
+        }else{
+          pro = Runtime.getRuntime().exec("java -jar aFile.jar");
+        }
 
-    }
+        //The stream obtains data piped from the standard output stream of the process
+        BufferedReader input = new BufferedReader(new InputStreamReader(pro.getInputStream()));
+        //The stream obtains data piped from the error output stream of the process
+        BufferedReader error = new BufferedReader(new InputStreamReader(pro.getErrorStream()));
+
+        String line1 = null;
+        String line2 = null;
+        while ((line1 = input.readLine()) != null) {
+          System.out.println(" " + line1);
+        }
+        while ((line2 = error.readLine()) != null) {
+          System.out.println(" " + line2);
+        }
+
+        //wait until the process pro has terminated
+        pro.waitFor();
+        //exit value 0 is a successful termination
+        System.out.println("exitValue() "+pro.exitValue());
+      } catch (Exception e){
+        System.out.println("error");
+      }
+  }
+
 
     public void getProjectFormGIT(){}
-
+//Commented it due to missing library imports
+/*
     public void jsonParser(String str){
       if (!isJsonString(str)) return;
       JSONObject obj = new JSONObject(str);
@@ -133,13 +165,13 @@ public class ContinuousIntegrationServer //extends AbstractHandler
       return true;
     }
 
-
+*/
 
     public void toFile(String commandToRun) throws Exception {
 
     }
-  
-  
+
+
 
     public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath){
 
