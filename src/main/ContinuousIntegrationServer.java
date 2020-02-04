@@ -56,23 +56,20 @@ public class ContinuousIntegrationServer //extends AbstractHandler
      */
 
     ArrayList<File> javaFiles = new ArrayList<>();
-    StringBuilder outputFromCI = new StringBuilder();
+    public StringBuilder outputFromCI = new StringBuilder();
 
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-       String sourcDIR = "C:\\Users\\Martin\\testCompile\\HelloWorld";
-       String cloneURL = "https://github.com/Gabbi68/HelloWorld.git";
+       String sourcDIR = "C:\\Users\\Martin\\testCompile\\HelloWorld1";
+       String cloneURL = "https://github.com/Gabbi68/Hea.git";
        String branch = "master";
 
 
 
         ContinuousIntegrationServer run = new ContinuousIntegrationServer();
         run.getProjectFromGIT(cloneURL,branch,sourcDIR);
-        run.build(sourcDIR);
 
-        String[] mails = {"nicolai.hellesnes@gmail.com"};
-        SendMail sendMail = new SendMail(mails,run.outputFromCI.toString());
 
 
        /*
@@ -101,6 +98,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
             filesTOCompiles = javaFile.getParent() + java.io.File.separator + javaFile.getName();
             System.out.println(filesTOCompiles = javaFile.getParent() + java.io.File.separator + javaFile.getName());
+
 
 
             OutputStream output = new OutputStream() {
@@ -218,7 +216,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
         String OS = System.getProperty("os.name").toLowerCase();
 
-
+//TODO Need A Way to catch errors
         if(OS.contains("win")){
 
             try {
