@@ -25,3 +25,5 @@ hs_err_pid*
 #the jar file we want
 !aFile.jar
 !dummyTest.jar
+!javax.mail-1.6.2.jar
+!jakarta.activation-1.2.1.jar
