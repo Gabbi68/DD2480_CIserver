@@ -1,13 +1,13 @@
 package main;
-
+/*
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
+*/
 import javax.tools.*;
 import java.io.*;
 import java.lang.Object;
 import java.util.*;
-
 
 import java.nio.file.Files;
 import java.util.Arrays;
@@ -23,13 +23,12 @@ import org.json.*;
  Skeleton of a main.ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
  */
-public class ContinuousIntegrationServer //extends AbstractHandler
-{
-
-
+public class ContinuousIntegrationServer {   
+ 
+    /*
     public static String clone_url;
     public static String branch;
-
+    
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -49,15 +48,18 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
         response.getWriter().println("CI job done");
     }
+    */
 
-     */
 
     ArrayList<File> javaFiles = new ArrayList<>();
 
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-        
+        String[] mails = {"nicolai.hellesnes@gmail.com"};
+        String output = "hej";
+        SendMail test = new SendMail(mails, output);
+        //test.SendMail(mails, output);
 
        /*
         Server server = new Server(8080);
@@ -114,7 +116,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     }
 
     public void getProjectFormGIT(){}
-
+    /*
     public void jsonParser(String str){
       if (!isJsonString(str)) return;
       JSONObject obj = new JSONObject(str);
@@ -132,6 +134,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
       }
       return true;
     }
+    */
 
 
 
