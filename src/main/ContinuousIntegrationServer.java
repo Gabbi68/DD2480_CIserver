@@ -61,14 +61,18 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-       String sourcDIR = "C:\\Users\\Martin\\testCompile\\HelloWorld1";
-       String cloneURL = "https://github.com/Gabbi68/Hea.git";
+       String sourcDIR = "C:\\Users\\Martin\\testCompile\\HelloWorld";
+       String cloneURL = "https://github.com/Gabbi68/HelloWorld.git";
        String branch = "master";
 
 
 
         ContinuousIntegrationServer run = new ContinuousIntegrationServer();
         run.getProjectFromGIT(cloneURL,branch,sourcDIR);
+        run.build(sourcDIR);
+        run.runtests();
+
+        System.out.println(run.outputFromCI.toString());
 
 
 
@@ -152,39 +156,64 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
 
     public void runtests(){
-      String OS = System.getProperty("os.name").toLowerCase();
-      //Runtime re = Runtime.getRuntime();
-      try{
-        Process pro;
-        if(OS.contains("win")){
-          pro = Runtime.getRuntime().exec("cmd.exe /c start java -jar aFile.jar");
-        }else{
-          pro = Runtime.getRuntime().exec("java -jar aFile.jar");
+
+        if(outputFromCI.toString().contains("Build successful")){
+
+
+
+            for(File javaFile: javaFiles){
+                if(javaFile.getName().toLowerCase().contains("test")){
+                    String temp = javaFile.getName().replace(".java","");
+
+
+                    String testFile = temp;
+
+
+
+
+                    outputFromCI.append("================"+testFile+"===================\n");
+
+                    String OS = System.getProperty("os.name").toLowerCase();
+
+                    try{
+                        Process pro;
+                        if(OS.contains("win")){
+                            pro = Runtime.getRuntime().exec("cmd.exe /c start java "+testFile);
+                        }else{
+                            pro = Runtime.getRuntime().exec("cd " + javaFile.getParent());
+                            pro = Runtime.getRuntime().exec("java "+testFile);
+                        }
+
+                        //The stream obtains data piped from the standard output stream of the process
+                        BufferedReader input = new BufferedReader(new InputStreamReader(pro.getInputStream()));
+                        //The stream obtains data piped from the error output stream of the process
+                        BufferedReader error = new BufferedReader(new InputStreamReader(pro.getErrorStream()));
+
+
+                        String line1 = null;
+                        String line2 = null;
+                        while ((line1 = input.readLine()) != null) {
+                            outputFromCI.append(line1+"\n");
+                            System.out.println(" " + line1);
+                        }
+                        outputFromCI.append("Error\n");
+                        while ((line2 = error.readLine()) != null) {
+                            outputFromCI.append(line2+"\n");
+                            System.out.println(" " + line2);
+                        }
+
+                        //wait until the process pro has terminated
+                        pro.waitFor();
+                        //exit value 0 is a successful termination
+                        outputFromCI.append("exitValue() "+pro.exitValue());
+                        //System.out.println("exitValue() "+pro.exitValue());
+                    } catch (Exception e){
+                        System.out.println("error");
+                    }
+                }
+            }
         }
-
-        //The stream obtains data piped from the standard output stream of the process
-        BufferedReader input = new BufferedReader(new InputStreamReader(pro.getInputStream()));
-        //The stream obtains data piped from the error output stream of the process
-        BufferedReader error = new BufferedReader(new InputStreamReader(pro.getErrorStream()));
-
-
-        String line1 = null;
-        String line2 = null;
-        while ((line1 = input.readLine()) != null) {
-          System.out.println(" " + line1);
-        }
-        while ((line2 = error.readLine()) != null) {
-          System.out.println(" " + line2);
-        }
-
-        //wait until the process pro has terminated
-        pro.waitFor();
-        //exit value 0 is a successful termination
-        System.out.println("exitValue() "+pro.exitValue());
-      } catch (Exception e){
-        System.out.println("error");
-      }
-  }
+    }
 
 /*
     public void jsonParser(String str){
@@ -223,7 +252,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
                 Runtime rt = Runtime.getRuntime();
                 rt.exec("cmd.exe /c start git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File(System.getProperty("user.home")));
 
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(4);
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -238,7 +267,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
                 rt.exec("git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File(System.getProperty("user.home")));
 
                 //Needs time to clone as it is a separate process so the code keeps running while the cloning is underway
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(4);
 
             }catch (Exception e){
                 e.printStackTrace();
