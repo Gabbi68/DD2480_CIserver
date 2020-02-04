@@ -9,6 +9,8 @@ import java.lang.Object;
 import java.util.*;
 
 
+
+
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -53,11 +55,17 @@ public class ContinuousIntegrationServer //extends AbstractHandler
      */
 
     ArrayList<File> javaFiles = new ArrayList<>();
+    StringBuilder outputFromCI = new StringBuilder();
 
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-        
+
+        ContinuousIntegrationServer run = new ContinuousIntegrationServer();
+        //run.getProjectFromGIT("https://github.com/Gabbi68/HelloWorld.git","master","C:\\Users\\Martin\\testCompile\\HelloWorld");
+        run.build("C:\\Users\\Martin\\testCompile\\HelloWorld");
+
+
 
        /*
         Server server = new Server(8080);
@@ -75,6 +83,10 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        DiagnosticCollector diagnosticsCollector = new DiagnosticCollector();
+
+
+
 
         String filesTOCompiles = "";
         for(File javaFile: javaFiles){
@@ -82,11 +94,34 @@ public class ContinuousIntegrationServer //extends AbstractHandler
             filesTOCompiles = javaFile.getParent() + java.io.File.separator + javaFile.getName();
             System.out.println(filesTOCompiles = javaFile.getParent() + java.io.File.separator + javaFile.getName());
 
-            int compileResult = compiler.run(null,null,null, filesTOCompiles);
+
+            OutputStream output = new OutputStream() {
+                private StringBuilder string = new StringBuilder();
+
+                @Override
+                public void write(int b) throws IOException {
+                    this.string.append((char) b );
+                }
+
+                //Netbeans IDE automatically overrides this toString()
+                public String toString() {
+                    return this.string.toString();
+                }
+            };
+
+
+
+
+
+
+            int compileResult = compiler.run(null,null,output, filesTOCompiles);
             if(compileResult == 0){
-                System.out.println("Compile success");
+                System.out.println(output.toString());
             }else {
-                System.out.println("Compile failed");
+                outputFromCI.append("Build Failed \n");
+                outputFromCI.append(output.toString());
+                System.out.println(outputFromCI);
+
             }
 
         }
@@ -113,7 +148,6 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
     }
 
-    public void getProjectFormGIT(){}
 /*
     public void jsonParser(String str){
       if (!isJsonString(str)) return;
@@ -124,7 +158,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
       branch = ref[ref.length - 1];
     }
 
-    public boolean IsJsonString(str) {
+    public boolean IsJsonString(String str) {
       try {
           JSON.parse(str);
       } catch (e) {
@@ -138,7 +172,6 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     public void toFile(String commandToRun) throws Exception {
 
     }
-  
   
 
     public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath){

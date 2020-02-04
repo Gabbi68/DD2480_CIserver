@@ -7,9 +7,11 @@ public class SendMail {
     email = address;
   }
 
-  public String setEmail(String address) {
+ /* public String setEmail(String address) {
     email = address;
   }
+
+  */
 
   public String getEmail() {
     return email;
