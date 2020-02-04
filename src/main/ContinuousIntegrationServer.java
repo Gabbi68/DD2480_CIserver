@@ -1,4 +1,4 @@
-package main;
+//package main;
 
 //import javax.servlet.http.HttpServletRequest;
 //import javax.servlet.http.HttpServletResponse;
@@ -61,7 +61,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
-       String sourcDIR = "C:\\Users\\Martin\\testCompile\\HelloWorld";
+       String sourcDIR = "/Users/stina/documents/HelloWorld";
        String cloneURL = "https://github.com/Gabbi68/HelloWorld.git";
        String branch = "master";
 
@@ -69,7 +69,10 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
         ContinuousIntegrationServer run = new ContinuousIntegrationServer();
         run.getProjectFromGIT(cloneURL,branch,sourcDIR);
+
+
         run.build(sourcDIR);
+
         run.runtests();
 
         System.out.println(run.outputFromCI.toString());
@@ -177,11 +180,12 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
                     try{
                         Process pro;
+                        //does not work for windows
                         if(OS.contains("win")){
                             pro = Runtime.getRuntime().exec("cmd.exe /c start java "+testFile);
                         }else{
-                            pro = Runtime.getRuntime().exec("cd " + javaFile.getParent());
-                            pro = Runtime.getRuntime().exec("java "+testFile);
+                            //pro = Runtime.getRuntime().exec(javaFile.getParent());
+                            pro = Runtime.getRuntime().exec("java -cp "+javaFile.getParent()+" "+testFile);
                         }
 
                         //The stream obtains data piped from the standard output stream of the process
@@ -194,12 +198,12 @@ public class ContinuousIntegrationServer //extends AbstractHandler
                         String line2 = null;
                         while ((line1 = input.readLine()) != null) {
                             outputFromCI.append(line1+"\n");
-                            System.out.println(" " + line1);
+                            //System.out.println(" " + line1);
                         }
                         outputFromCI.append("Error\n");
                         while ((line2 = error.readLine()) != null) {
                             outputFromCI.append(line2+"\n");
-                            System.out.println(" " + line2);
+                            //System.out.println(" " + line2);
                         }
 
                         //wait until the process pro has terminated
@@ -259,7 +263,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
             }
 
 
-        }else if (OS.contains("sunos")){
+        }else{
 
 
             try {
