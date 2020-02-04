@@ -1,8 +1,8 @@
 package main;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
+//import javax.servlet.ServletException;
 import javax.tools.*;
 import java.io.*;
 import java.lang.Object;
@@ -29,7 +29,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 
     public static String clone_url;
     public static String branch;
-
+/*
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -114,7 +114,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
     }
 
     public void getProjectFormGIT(){}
-
+/*
     public void jsonParser(String str){
       if (!isJsonString(str)) return;
       JSONObject obj = new JSONObject(str);
@@ -133,7 +133,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
       return true;
     }
 
-
+*/
 
     public void toFile(String commandToRun) throws Exception {
 
