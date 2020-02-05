@@ -1,9 +1,8 @@
 package Test;
 
-public class Test {
-<<<<<<< Updated upstream
-=======
+import main.ContinuousIntegrationServer;
 
+public class Test {
 
     //=============Test Cases Compile==================
 
@@ -68,5 +67,7 @@ public class Test {
     }
 
     //=============Test Cases Compile==================
->>>>>>> Stashed changes
+
+
+    //=============Test Cases Compile==================
 }

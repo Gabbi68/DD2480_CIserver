@@ -8,8 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
-<<<<<<< Updated upstream
-=======
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" name="DD2480_CIserver" level="project" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
@@ -24,6 +22,5 @@
         <SOURCES />
       </library>
     </orderEntry>
->>>>>>> Stashed changes
   </component>
 </module>
