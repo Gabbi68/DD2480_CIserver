@@ -74,15 +74,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
       clone_url = obj.getJSONObject("repository").getString("clone_url");
       String ref = obj.getString("ref");
       String[] refpath = ref.split("/");
-      branch = ref[ref.length - 1];
+      branch = refpath[refpath.length - 1];
       sha = obj.getString("after");
       email = obj.getJSONObject("pusher").getString("email");
     }
 
-    public boolean IsJsonString(str) {
+    public boolean isJsonString(String str) {
       try {
           JSON.parse(str);
-      } catch (e) {
+      } catch (Exception e) {
           return false;
       }
       return true;
