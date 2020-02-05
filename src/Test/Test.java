@@ -4,7 +4,6 @@ import main.ContinuousIntegrationServer;
 
 public class Test {
 
-
     //=============Test Cases Compile==================
 
     public void testCompileSuccess(){
@@ -59,6 +58,15 @@ public class Test {
 
     //=============Test Cases JSON==================
 
+    public void testJSONParsing() {
+
+    }
+
+    public void testWriteToFile() {
+
+    }
+
+    //=============Test Cases Compile==================
 
 
     //=============Test Cases Compile==================
