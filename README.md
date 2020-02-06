@@ -19,13 +19,13 @@ This is a CI-server which should build and test files uploaded to a git-reposito
 
 Create a server object, use the server method setHandler with ContinuousIntegrationServer as parameter, then use the start and join methods for the server.
 
-` Server server = new Server(8080);
+` Server server = new Server(8080);`
 
-server.setHandler(new ContinuousIntegrationServer());
+`server.setHandler(new ContinuousIntegrationServer());`
 
-        server.start();
+`server.start();`
         
-        server.join(); `
+`server.join(); `
 
 ### Main
 
