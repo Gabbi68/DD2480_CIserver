@@ -25,6 +25,8 @@ Create a server object, use the server method setHandler with ContinuousIntegrat
 - build
 - listFilesForFolder
 - runtests
+The function runs the builded test files of the project. The test files has to have the name "test" in them to be run. Every file is executed and the output from the files is saved in a string builder, this includes both information about the test cases and information of a possible error message. For every file a process is created and run with exec.
+Test the function: The function was tested with different test-files as input, these test files include for example HelloWorldTest which is a file that will use both the output stream and the error-stream due to an exception and errorTest that is a function that never returns due to an error. 
 - jsonParser
 - isJsonString
 - toFile
@@ -41,17 +43,13 @@ Create a server object, use the server method setHandler with ContinuousIntegrat
 - test
 - aFile.jar
 - dummyTest.jar
+- ErrorTest: 
+- HelloWorldTest
 
 # Contributions
 
- - Stina
- - Martin 
- - Nicolai
- - Aditya
+ - Stina- runtests, test files
+ - Martin- build, listFilesForFolder, webhook, test file
+ - Nicolai- sendMail, ngrok
+ - Aditya- JSON parser, test files
 
-# Architecture
-Norge er bestff
-gg
-ff
-
-final t
