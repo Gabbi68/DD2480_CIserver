@@ -44,7 +44,7 @@ Test the function: The function was tested with different test-files as input, t
 
 ### SendMail
 
-- sendMail
+- sendMail: Tested manually by tring to send a mail and verifying that it got received.
 
 ### Test
 
