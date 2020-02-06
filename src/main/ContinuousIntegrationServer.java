@@ -28,10 +28,10 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
 
-    public static String clone_url;
-    public static String branch;
-    public static String email;
-    public static String sha;
+    public String clone_url;
+    public String branch;
+    public String email;
+    public String sha;
 
 
     public void handle(String target,
