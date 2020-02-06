@@ -50,11 +50,4 @@ Create a server object, use the server method setHandler with ContinuousIntegrat
  - Aditya
 
 # Architecture
-testing webhookgggggggeeefasfasf
-assdasdasfdasfdgddddd
-afasfffssfffasa
-bbbbbb
-test
-test2
-test3
-test4
+
