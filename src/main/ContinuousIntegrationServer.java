@@ -236,7 +236,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
 
     }
-
+ 
+ /*
+  * retrieves "clone_url", "branch", "email", and "sha" from a JSON-formatted string received from a GitHub webhook
+  */
     public void jsonParser(String str){
         JSONObject obj = new JSONObject(str);
         clone_url = obj.getJSONObject("repository").getString("clone_url");
@@ -247,30 +250,31 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         email = obj.getJSONObject("pusher").getString("email");
     }
 
+ /*
+  * writes build history to a local file (buildHistory.txt) in JSON format
+  */
+    public void writeToFile(String filename) throws IOException {
+        File f = new File(filename);
+        if (!f.exists()) { // if first build
+            PrintWriter writer = new PrintWriter(filename, "UTF-8"); // create file for writing
+            JSONObject json = new JSONObject(); // create json
 
-    public void writeToFile() throws IOException {
-        File f = new File("buildHistory.txt");
-        if (!f.exists()) {
-            PrintWriter writer = new PrintWriter("buildHistory.txt", "UTF-8");
-            JSONObject json = new JSONObject();
             JSONObject info = new JSONObject();
             info.put("clone_url", clone_url);
             info.put("branch", branch);
             json.put(sha, info);
-            writer.print(json.toString());
+            writer.print(json.toString()); // write json to file
             writer.close();
-            return;
-        }
-        if (f.exists() && !f.isDirectory()) {
-            Path path = Paths.get("buildHistory.txt");
-            String content = Files.readString(path);
-            JSONObject json = new JSONObject(content);
+        } else if (f.exists() && !f.isDirectory()) { // if we have built before
+            Path path = Paths.get(filename);
+            String content = Files.readString(path); // read file
+            PrintWriter writer = new PrintWriter(filename, "UTF-8"); // open file for writing
+            JSONObject json = new JSONObject(content); // create json
             JSONObject info = new JSONObject();
             info.put("clone_url", clone_url);
             info.put("branch", branch);
             json.put(sha, info);
-            PrintWriter writer = new PrintWriter("buildHistory.txt", "UTF-8");
-            writer.print(json.toString());
+            writer.print(json.toString()); // write json to file
             writer.close();
         }
     }
