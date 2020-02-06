@@ -97,6 +97,16 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     }
 
 
+ 
+ /*
+    *The Build Function takes a source directory as input, then uses
+    *The listFilesForFolder() function to get every .java file in the given source directory.
+    *
+    *All java files are stored in the global arrayList, javaFiles then loop through every file and compiles it
+    * And reports the status of each compile into the OutputFromCI stringBuilder.
+    *
+    * */
+ 
     public void build(String souceDIR){
 
         File folder = new File(souceDIR);
@@ -138,6 +148,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
+  /*
+    *Recursively loops through the file tree and adds every java file to the Global variable javaFiles
+    *
+     */
+ 
     public void listFilesForFolder(File folder) {
         for (File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
@@ -205,6 +220,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
+  /*
+    *Uses git clone to get the project and spesific branch and stores it at the given local path
+    *
+     */
+ 
     public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath) {
 
         String OS = System.getProperty("os.name").toLowerCase();
