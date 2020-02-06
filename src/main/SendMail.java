@@ -17,13 +17,15 @@ public class SendMail {
 
   public SendMail (String email_address, String output) throws Exception {
     // email address the mail is sent from
-    String send_from = "send_from16@mail.com";
-    String password = "password16";
+    //String send_from = "send_from16@mail.com";
+    String send_from = "nicolai.hellesnes@gmail.com";
+    String password = "MyPASSWORD";
+    //String password = "password16";
     // email addresses the mail should be sent to
-    String send_to = "send_from16@mail.com";
+   // String send_to = "send_from16@mail.com";
     // host and port for smtp server
-    String smtp_host = "smtp.mail.com";
-    String smtp_port = "587";
+    String smtp_host = "smtp.gmail.com";
+    String smtp_port = "465";
 
     // define the properties of the server
     Properties properties = new Properties();

@@ -28,10 +28,10 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
 
-    public String clone_url;
-    public String branch;
-    public String email;
-    public String sha;
+    public static String clone_url;
+    public static String branch;
+    public static String email;
+    public static String sha;
 
 
     public void handle(String target,
@@ -56,7 +56,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             jsonParser(tmp_str);
             getProjectFromGIT(clone_url, branch, "/home/nico/Downloads/build_test");
             build("/home/nico/Downloads/build_test");
+            System.out.println("build:" + str.toString());
             runtests();
+            System.out.println("test:" + str.toString());
+
             String y = outputFromCI.toString();
             System.out.println(y);
             System.out.println(email);
@@ -97,16 +100,6 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     }
 
 
- 
- /*
-    *The Build Function takes a source directory as input, then uses
-    *The listFilesForFolder() function to get every .java file in the given source directory.
-    *
-    *All java files are stored in the global arrayList, javaFiles then loop through every file and compiles it
-    * And reports the status of each compile into the OutputFromCI stringBuilder.
-    *
-    * */
- 
     public void build(String souceDIR){
 
         File folder = new File(souceDIR);
@@ -148,11 +141,6 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
-  /*
-    *Recursively loops through the file tree and adds every java file to the Global variable javaFiles
-    *
-     */
- 
     public void listFilesForFolder(File folder) {
         for (File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
@@ -165,57 +153,39 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
-    /*Run the tests in the repository. 
-    All the files that contains "test" in their name is considered a test case and are run in this function.
-    If the build fails the tests will not be ran.
-    The function appends the output from the test-files to outputFromCI, this includes the intended output from the test-files
-    and if the there was an error during execution. The function returns everything the test-files returns*/
     public void runtests(){
-
-        if(!outputFromCI.toString().contains("Build Failed")){
-
+        if(!(outputFromCI.toString().contains("Build Failed"))){
             for(File javaFile: javaFiles){
                 if(javaFile.getName().toLowerCase().contains("test")){
                     String temp = javaFile.getName().replace(".java","");
-
                     String testFile = temp;
-
                     outputFromCI.append("================"+testFile+"===================\n");
-
                     try{
                         Process pro;
-                       
                         pro = Runtime.getRuntime().exec("java -cp "+javaFile.getParent()+" "+testFile);
-                        
-
                         //The stream obtains data piped from the standard output stream of the process
                         BufferedReader input = new BufferedReader(new InputStreamReader(pro.getInputStream()));
                         //The stream obtains data piped from the error output stream of the process
                         BufferedReader error = new BufferedReader(new InputStreamReader(pro.getErrorStream()));
-
-
                         String line1 = null;
                         String line2 = null;
                         //the output from the file
                         while ((line1 = input.readLine()) != null) {
                             outputFromCI.append(line1+"\n");
                         }
-                        
                         //the output if there is an error message
                         boolean err = true;
                         while ((line2 = error.readLine()) != null) {
                             if(err){
-                              outputFromCI.append("Error in program: \n"); 
-                              err = false; 
+                              outputFromCI.append("Error in program: \n");
+                              err = false;
                             }
                             outputFromCI.append(line2+"\n");
                         }
-
                         //wait until the process pro has terminated
                         pro.waitFor();
                         //exit value 0 is a successful termination
                         outputFromCI.append("exitValue() "+pro.exitValue());
-
                     } catch (Exception e){
                         System.out.println("error");
                     }
@@ -224,25 +194,18 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }else{
             outputFromCI.append("Build failed, no tests were run");
         }
-
         String OS = System.getProperty("os.name").toLowerCase();
         try{
             if(OS.contains("win")){
                 Process pro1 = Runtime.getRuntime().exec("cmd.exe /c start RD /S /Q "+javaFiles.get(0).getParent());
             }else {
-                Process pro1 = Runtime.getRuntime().exec("rm -r " + javaFiles.get(0).getParent());
+                Process pro1 = Runtime.getRuntime().exec("rm -r  /home/nico/Downloads/build_test");
             }
         }catch (IOException ex){
             ex.printStackTrace();
         }
-
     }
 
-  /*
-    *Uses git clone to get the project and spesific branch and stores it at the given local path
-    *
-     */
- 
     public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath) {
 
         String OS = System.getProperty("os.name").toLowerCase();
