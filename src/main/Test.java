@@ -1,6 +1,6 @@
 //package Test;
 
-import main.ContinuousIntegrationServer;
+//import ContinuousIntegrationServer.*;
 
 public class Test {
 
@@ -9,7 +9,7 @@ public class Test {
     public void testCompileSuccess(){
 
         ContinuousIntegrationServer run = new ContinuousIntegrationServer();
-        run.build("./Test/HelloWorld");
+        run.build("./HelloWorld");
 
         if(run.outputFromCI.toString().contains("Success")){
             System.out.println("Test is Successful");
@@ -23,7 +23,7 @@ public class Test {
     public void testCompileFailed(){
 
         ContinuousIntegrationServer run = new ContinuousIntegrationServer();
-        run.build("./Test/failHelloWorld");
+        run.build("./failHelloWorld");
 
         if(run.outputFromCI.toString().contains("Failed")){
             System.out.println("Test is Successful");

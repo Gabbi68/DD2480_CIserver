@@ -65,6 +65,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             }catch(Exception e) {
                 e.printStackTrace();
             }
+            outputFromCI = new StringBuilder();
+            javaFiles = new ArrayList<>();
         }
         
         // here you do all the continuous integration tasks
@@ -127,10 +129,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
             int compileResult = compiler.run(null,null,output, filesTOCompiles);
             if(compileResult == 0){
-                outputFromCI.append("Build successful \n");
+                outputFromCI.append("Build successful" + javaFile.getName()+ "\n");
                 outputFromCI.append(output.toString());
             }else {
-                outputFromCI.append("Build Failed \n");
+                outputFromCI.append("Build Failed " + javaFile.getName()+ "\n");
                 outputFromCI.append(output.toString());
                 System.out.println(outputFromCI);
 
@@ -150,9 +152,14 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
+   /*Run the tests in the repository. 
+    All the files that contains "test" in their name is considered a test case and are run in this function.
+    If the build fails the tests will not be ran.
+    The function appends the output from the test-files to outputFromCI, this includes the intended output from the test-files
+    and if the there was an error during execution. The function returns everything the test-files returns*/
     public void runtests(){
 
-        if(outputFromCI.toString().contains("Build successful")){
+        if(!outputFromCI.toString().contains("Build Failed")){
 
             for(File javaFile: javaFiles){
                 if(javaFile.getName().toLowerCase().contains("test")){
@@ -162,17 +169,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
                     outputFromCI.append("================"+testFile+"===================\n");
 
-                    String OS = System.getProperty("os.name").toLowerCase();
-
                     try{
                         Process pro;
-                        //does not work for windows
-                        if(OS.contains("win")){
-                            pro = Runtime.getRuntime().exec("cmd.exe /c start java "+testFile);
-                        }else{
-                            //pro = Runtime.getRuntime().exec(javaFile.getParent());
-                            pro = Runtime.getRuntime().exec("java -cp "+javaFile.getParent()+" "+testFile);
-                        }
+                       
+                        pro = Runtime.getRuntime().exec("java -cp "+javaFile.getParent()+" "+testFile);
+                        
 
                         //The stream obtains data piped from the standard output stream of the process
                         BufferedReader input = new BufferedReader(new InputStreamReader(pro.getInputStream()));
@@ -182,27 +183,46 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
                         String line1 = null;
                         String line2 = null;
+                        //the output from the file
                         while ((line1 = input.readLine()) != null) {
                             outputFromCI.append(line1+"\n");
-                            //System.out.println(" " + line1);
                         }
-                        outputFromCI.append("Error\n");
+                        
+                        //the output if there is an error message
+                        boolean err = true;
                         while ((line2 = error.readLine()) != null) {
+                            if(err){
+                              outputFromCI.append("Error in program: \n"); 
+                              err = false; 
+                            }
                             outputFromCI.append(line2+"\n");
-                            //System.out.println(" " + line2);
                         }
 
                         //wait until the process pro has terminated
                         pro.waitFor();
                         //exit value 0 is a successful termination
                         outputFromCI.append("exitValue() "+pro.exitValue());
-                        //System.out.println("exitValue() "+pro.exitValue());
+
                     } catch (Exception e){
                         System.out.println("error");
                     }
                 }
             }
+        }else{
+            outputFromCI.append("Build failed, no tests were run");
         }
+
+        String OS = System.getProperty("os.name").toLowerCase();
+        try{
+            if(OS.contains("win")){
+                Process pro1 = Runtime.getRuntime().exec("cmd.exe /c start RD /S /Q "+javaFiles.get(0).getParent());
+            }else {
+                Process pro1 = Runtime.getRuntime().exec("rm -r " + javaFiles.get(0).getParent());
+            }
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
+
     }
 
     public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath) {
