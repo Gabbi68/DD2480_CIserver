@@ -1,8 +1,9 @@
-package main;
+// compile & run: java -cp .:/home/nico/Documents/programming/ci_server/DD2480_CIserver/lib/json-20190722.jar:servlet-api-2.5.jar:jetty-all-$JETTY_VERSION.jar ContinuousIntegrationServer
+// compile: javac -cp .:/home/nico/Documents/programming/ci_server/DD2480_CIserver/lib/json-20190722.jar:servlet-api-2.5.jar:/home/nico/Documents/programming/ci_server/DD2480_CIserver/lib/javax.mail-1.6.2.jar:/home/nico/Documents/programming/ci_server/DD2480_CIserver/lib/jakarta.activation-1.2.1.jar:jetty-all-$JETTY_VERSION.jar ContinuousIntegrationServer.java
 
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
 import org.json.*;
 
@@ -15,26 +16,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-/*
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.json.*;
 
 
 /**
  Skeleton of a main.ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
  */
-public class ContinuousIntegrationServer //extends AbstractHandler
-{
+public class ContinuousIntegrationServer extends AbstractHandler {
 
     public static String clone_url;
     public static String branch;
     public static String email;
     public static String sha;
 
-/*
+
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
@@ -44,18 +43,42 @@ public class ContinuousIntegrationServer //extends AbstractHandler
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
-
-        System.out.println(target);
-
+        StringBuilder str = new StringBuilder();
+        BufferedReader read = request.getReader();
+        String line;
+        if (request.toString().contains("POST")) {
+            while ((line = read.readLine()) != null) {
+                str.append(line);
+            }
+            String tmp_str;
+            tmp_str = str.toString();
+            System.out.println(tmp_str);
+            jsonParser(tmp_str);
+            getProjectFromGIT(clone_url, branch, "/home/nico/Downloads/build_test");
+            build("/home/nico/Downloads/build_test");
+            runtests();
+            String y = outputFromCI.toString();
+            System.out.println(y);
+            System.out.println(email);
+            try {
+                SendMail testy = new SendMail(email, y);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
         // here you do all the continuous integration tasks
         // for example
         // 1st clone your repository
         // 2nd compile the code
 
+        //socket stuff
+        System.out.println(baseRequest);
+        System.out.println(baseRequest.toString());
+        System.out.println(request.getReader());
         response.getWriter().println("CI job done");
     }
 
-     */
 
     ArrayList<File> javaFiles = new ArrayList<>();
     public StringBuilder outputFromCI = new StringBuilder();
@@ -67,12 +90,10 @@ public class ContinuousIntegrationServer //extends AbstractHandler
 //       String cloneURL = "https://github.com/Gabbi68/HelloWorld.git";
 
 
-       /*
         Server server = new Server(8080);
         server.setHandler(new ContinuousIntegrationServer());
         server.start();
-        server.join();
-        */
+        server.join();   
     }
 
 
@@ -237,6 +258,7 @@ public class ContinuousIntegrationServer //extends AbstractHandler
         if (!f.exists()) { // if first build
             PrintWriter writer = new PrintWriter(filename, "UTF-8"); // create file for writing
             JSONObject json = new JSONObject(); // create json
+
             JSONObject info = new JSONObject();
             info.put("clone_url", clone_url);
             info.put("branch", branch);
@@ -256,4 +278,5 @@ public class ContinuousIntegrationServer //extends AbstractHandler
             writer.close();
         }
     }
+
 }
