@@ -152,7 +152,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             }
         }
     }
-
+    /*Run the tests in the repository. 
+    All the files that contains "test" in their name is considered a test case and are run in this function.
+    If the build fails the tests will not be ran. The function needs compiled files in the javaFiles array as input.
+    The function appends the output from the test-files to outputFromCI, this includes the intended output from the test-files
+    and if the there was an error during execution. The function returns everything the test-files returns.*/
     public void runtests(){
         if(!(outputFromCI.toString().contains("Build Failed"))){
             for(File javaFile: javaFiles){
