@@ -232,10 +232,10 @@ public class ContinuousIntegrationServer //extends AbstractHandler
  /*
   * writes build history to a local file (buildHistory.txt) in JSON format
   */
-    public void writeToFile() throws IOException {
-        File f = new File("buildHistory.txt");
+    public void writeToFile(String filename) throws IOException {
+        File f = new File(filename);
         if (!f.exists()) { // if first build
-            PrintWriter writer = new PrintWriter("buildHistory.txt", "UTF-8"); // create file for writing
+            PrintWriter writer = new PrintWriter(filename, "UTF-8"); // create file for writing
             JSONObject json = new JSONObject(); // create json
             JSONObject info = new JSONObject();
             info.put("clone_url", clone_url);
@@ -244,9 +244,9 @@ public class ContinuousIntegrationServer //extends AbstractHandler
             writer.print(json.toString()); // write json to file
             writer.close();
         } else if (f.exists() && !f.isDirectory()) { // if we have built before
-            Path path = Paths.get("buildHistory.txt");
+            Path path = Paths.get(filename);
             String content = Files.readString(path); // read file
-            PrintWriter writer = new PrintWriter("buildHistory.txt", "UTF-8"); // open file for writing
+            PrintWriter writer = new PrintWriter(filename, "UTF-8"); // open file for writing
             JSONObject json = new JSONObject(content); // create json
             JSONObject info = new JSONObject();
             info.put("clone_url", clone_url);
