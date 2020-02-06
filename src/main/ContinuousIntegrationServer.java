@@ -56,7 +56,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             jsonParser(tmp_str);
             getProjectFromGIT(clone_url, branch, "/home/nico/Downloads/build_test");
             build("/home/nico/Downloads/build_test");
+            System.out.println("build:" + str.toString());
             runtests();
+            System.out.println("test:" + str.toString());
+
             String y = outputFromCI.toString();
             System.out.println(y);
             System.out.println(email);
@@ -65,8 +68,6 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             }catch(Exception e) {
                 e.printStackTrace();
             }
-            outputFromCI = new StringBuilder();
-            javaFiles = new ArrayList<>();
         }
         
         // here you do all the continuous integration tasks
@@ -129,10 +130,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
             int compileResult = compiler.run(null,null,output, filesTOCompiles);
             if(compileResult == 0){
-                outputFromCI.append("Build successful" + javaFile.getName()+ "\n");
+                outputFromCI.append("Build successful \n");
                 outputFromCI.append(output.toString());
             }else {
-                outputFromCI.append("Build Failed " + javaFile.getName()+ "\n");
+                outputFromCI.append("Build Failed \n");
                 outputFromCI.append(output.toString());
                 System.out.println(outputFromCI);
 
@@ -152,57 +153,39 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
-   /*Run the tests in the repository. 
-    All the files that contains "test" in their name is considered a test case and are run in this function.
-    If the build fails the tests will not be ran.
-    The function appends the output from the test-files to outputFromCI, this includes the intended output from the test-files
-    and if the there was an error during execution. The function returns everything the test-files returns*/
     public void runtests(){
-
-        if(!outputFromCI.toString().contains("Build Failed")){
-
+        if(!(outputFromCI.toString().contains("Build Failed"))){
             for(File javaFile: javaFiles){
                 if(javaFile.getName().toLowerCase().contains("test")){
                     String temp = javaFile.getName().replace(".java","");
-
                     String testFile = temp;
-
                     outputFromCI.append("================"+testFile+"===================\n");
-
                     try{
                         Process pro;
-                       
                         pro = Runtime.getRuntime().exec("java -cp "+javaFile.getParent()+" "+testFile);
-                        
-
                         //The stream obtains data piped from the standard output stream of the process
                         BufferedReader input = new BufferedReader(new InputStreamReader(pro.getInputStream()));
                         //The stream obtains data piped from the error output stream of the process
                         BufferedReader error = new BufferedReader(new InputStreamReader(pro.getErrorStream()));
-
-
                         String line1 = null;
                         String line2 = null;
                         //the output from the file
                         while ((line1 = input.readLine()) != null) {
                             outputFromCI.append(line1+"\n");
                         }
-                        
                         //the output if there is an error message
                         boolean err = true;
                         while ((line2 = error.readLine()) != null) {
                             if(err){
-                              outputFromCI.append("Error in program: \n"); 
-                              err = false; 
+                              outputFromCI.append("Error in program: \n");
+                              err = false;
                             }
                             outputFromCI.append(line2+"\n");
                         }
-
                         //wait until the process pro has terminated
                         pro.waitFor();
                         //exit value 0 is a successful termination
                         outputFromCI.append("exitValue() "+pro.exitValue());
-
                     } catch (Exception e){
                         System.out.println("error");
                     }
@@ -211,18 +194,16 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }else{
             outputFromCI.append("Build failed, no tests were run");
         }
-
         String OS = System.getProperty("os.name").toLowerCase();
         try{
             if(OS.contains("win")){
                 Process pro1 = Runtime.getRuntime().exec("cmd.exe /c start RD /S /Q "+javaFiles.get(0).getParent());
             }else {
-                Process pro1 = Runtime.getRuntime().exec("rm -r " + javaFiles.get(0).getParent());
+                Process pro1 = Runtime.getRuntime().exec("rm -r  /home/nico/Downloads/build_test");
             }
         }catch (IOException ex){
             ex.printStackTrace();
         }
-
     }
 
     public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath) {
@@ -256,7 +237,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
 
     }
-
+ 
+ /*
+  * retrieves "clone_url", "branch", "email", and "sha" from a JSON-formatted string received from a GitHub webhook
+  */
     public void jsonParser(String str){
         JSONObject obj = new JSONObject(str);
         clone_url = obj.getJSONObject("repository").getString("clone_url");
@@ -267,30 +251,31 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         email = obj.getJSONObject("pusher").getString("email");
     }
 
+ /*
+  * writes build history to a local file (buildHistory.txt) in JSON format
+  */
+    public void writeToFile(String filename) throws IOException {
+        File f = new File(filename);
+        if (!f.exists()) { // if first build
+            PrintWriter writer = new PrintWriter(filename, "UTF-8"); // create file for writing
+            JSONObject json = new JSONObject(); // create json
 
-    public void writeToFile() throws IOException {
-        File f = new File("buildHistory.txt");
-        if (!f.exists()) {
-            PrintWriter writer = new PrintWriter("buildHistory.txt", "UTF-8");
-            JSONObject json = new JSONObject();
             JSONObject info = new JSONObject();
             info.put("clone_url", clone_url);
             info.put("branch", branch);
             json.put(sha, info);
-            writer.print(json.toString());
+            writer.print(json.toString()); // write json to file
             writer.close();
-            return;
-        }
-        if (f.exists() && !f.isDirectory()) {
-            Path path = Paths.get("buildHistory.txt");
-            String content = Files.readString(path);
-            JSONObject json = new JSONObject(content);
+        } else if (f.exists() && !f.isDirectory()) { // if we have built before
+            Path path = Paths.get(filename);
+            String content = Files.readString(path); // read file
+            PrintWriter writer = new PrintWriter(filename, "UTF-8"); // open file for writing
+            JSONObject json = new JSONObject(content); // create json
             JSONObject info = new JSONObject();
             info.put("clone_url", clone_url);
             info.put("branch", branch);
             json.put(sha, info);
-            PrintWriter writer = new PrintWriter("buildHistory.txt", "UTF-8");
-            writer.print(json.toString());
+            writer.print(json.toString()); // write json to file
             writer.close();
         }
     }

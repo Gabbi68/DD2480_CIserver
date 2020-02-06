@@ -4,6 +4,10 @@
 
 public class Test {
 
+    public static void main(String[] args) {
+        Test run = new Test();
+        run.testCompileSuccess();
+    }
     //=============Test Cases Compile==================
 
     public void testCompileSuccess(){
