@@ -61,4 +61,4 @@ Test the function: The function was tested with different test-files as input, t
  - Stina- runtests, test files
  - Martin- build, listFilesForFolder, webhook, test file
  - Nicolai- sendMail, ngrok
- - Aditya- JSON parser, test files
+ - Aditya- JSON parser, build history, test files
