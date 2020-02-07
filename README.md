@@ -62,7 +62,10 @@ Test the function: The function was tested by doing several commits to different
 
 ### SendMail
 
-- sendMail: Tested manually by tring to send a mail and verifying that it got received.
+- sendMail
+Implemented with the java mail api. The SendMail method takes two parameters, one parameter for where the mail should be sent and one paramater for what the contents of the mail should be. An gmail-address and the google smtp server is used to send the mail.
+
+Test the function: Tested manually by tring to send a mail and verifying that it got received.
 
 ### Test
 
