@@ -78,4 +78,5 @@ Test the function: The function was tested by doing several commits to different
  - Martin- build, listFilesForFolder, webhook, test file, getProjectFromGIT
  - Nicolai- sendMail, ngrok
  - Aditya- JSON parser, build history, test files
+ b
 
