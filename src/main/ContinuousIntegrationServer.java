@@ -99,7 +99,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         server.join();   
     }
 
- /*
+ /**
  *
  *Takes Source dir as string as input, this is then passed to listFilesForFolder() as a File.
  *When the listFilesForFolder() has populated the javaFiles<> it loops thorugh and compiles every file at its current location
@@ -147,7 +147,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
- /*
+ /**
  *Takes File as input and recursivly finds every .java file and adds them to javaFiles 
  */
     public void listFilesForFolder(File folder) {
@@ -161,11 +161,13 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             }
         }
     }
-    /*Run the tests in the repository. 
+    /**
+    Run the tests in the repository. 
     All the files that contains "test" in their name is considered a test case and are run in this function.
     If the build fails the tests will not be ran. The function needs compiled files in the javaFiles array as input.
     The function appends the output from the test-files to outputFromCI, this includes the intended output from the test-files
-    and if the there was an error during execution. The function returns everything the test-files returns.*/
+    and if the there was an error during execution. The function returns everything the test-files returns.
+    */
     public void runtests(){
         if(!(outputFromCI.toString().contains("Build Failed"))){
             for(File javaFile: javaFiles){
@@ -220,7 +222,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     }
 
  
- /*
+ /**
  *Gets clone link and branch name from the webhook JSON and a static path is added when calling the function, then it will
  *start a commandline process and run the git clone commands. 
  */
@@ -255,7 +257,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
     }
  
- /*
+ /**
   * retrieves "clone_url", "branch", "email", and "sha" from a JSON-formatted string received from a GitHub webhook
   */
     public void jsonParser(String str){
@@ -268,7 +270,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         email = obj.getJSONObject("pusher").getString("email");
     }
 
- /*
+ /**
   * writes build history to a local file (buildHistory.txt) in JSON format
   */
     public void writeToFile(String filename) throws IOException {
