@@ -31,7 +31,7 @@ Create a server object, use the server method setHandler with ContinuousIntegrat
 
 - build
 
-The build function take a source directory as in input, it then utilize the listfiles() function to added to a gobal variable array that it loops through and builds each file in the project. For every file a build is made and a "Build Successful" message is added in the string builder if the file was build correctly, if not a "Build failed" message is added.
+The build function take a source directory as in input, it then utilize the listfiles() function to added to a gobal variable array that it loops through and builds each file in the project. For every build that was made a "Build Successful" message is added in the string builder if the file was build correctly, if not a "Build failed" message is added.
 
 Test the function: The function was tested by adding several programs to the git repository, both files that could be build and not and the result was observed for every file.
 
