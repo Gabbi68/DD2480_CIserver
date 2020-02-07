@@ -1,38 +1,31 @@
-package main;
-
-import javax.mail.AuthenticationFailedException;
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.naming.AuthenticationException;
-import java.util.Properties;
-
 // source: https://javaee.github.io/javamail/
 // source: https://github.com/eclipse-ee4j/jaf/releases
-
-import java.util.Properties;
-// source: https://javaee.github.io/javamail/
-import javax.jms.Session;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.naming.AuthenticationException;
-// source: https://github.com/eclipse-ee4j/jaf/releases
+import java.util.Properties;
 import javax.activation.*;
+import java.util.Properties;
 
+
+
+/*
+  Class used to send mail, method takes email address 
+  and what the mail should output. Email is sent from send_from16@email.com
+*/
 public class SendMail {
 
-  public SendMail (String[] email_address, String output) throws Exception {
-    // public static void main(String[] args) throws Exception {
+  public SendMail (String email_address, String output) throws Exception {
     // email address the mail is sent from
-    String send_from = "send_from16@mail.com";
-    String password = "password16";
+    //String send_from = "send_from16@mail.com";
+    String send_from = "nicolai.hellesnes@gmail.com";
+    String password = "MyPASSWORD";
+    //String password = "password16";
     // email addresses the mail should be sent to
-    String send_to = "send_from16@mail.com";
+   // String send_to = "send_from16@mail.com";
     // host and port for smtp server
-    String smtp_host = "smtp.mail.com";
-    String smtp_port = "587";
+    String smtp_host = "smtp.gmail.com";
+    String smtp_port = "465";
 
     // define the properties of the server
     Properties properties = new Properties();
@@ -49,7 +42,6 @@ public class SendMail {
     };
 
     // create a new mail session
-    //Session session = Session.getDefaultInstance(properties, auth);
     javax.mail.Session session = javax.mail.Session.getDefaultInstance(properties,auth);
 
     // create a new email message object in the mime format
@@ -57,12 +49,9 @@ public class SendMail {
     message.setFrom(new InternetAddress(send_from));
 
     // add all the recipients to the message
-    for (String i : email_address) {
-      message.addRecipient(Message.RecipientType.TO, new InternetAddress(i));
-    }
-
+    message.addRecipient(Message.RecipientType.TO, new InternetAddress(email_address));
     message.setContent(message, "text/plain");
-    message.setSubject("test");
+    message.setSubject("CI notification");
     message.setText(output);
 
     // try to send email
