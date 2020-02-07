@@ -29,15 +29,15 @@ Create a server object, use the server method setHandler with ContinuousIntegrat
 
 ### Main
 
-(WRITE HOW THE FUCTIONS WORKS AND HOW THEY ARE TESTED)
-The build function take a source directory as in input, it then utilize the listfiles() function to added to a gobal variable array that it loops through and builds each file in the project.
 - build
 
-Takes a souce directory and finds every .java file in the given directory.
+The function compiles the files given in the javaFiles array. For every file a build is made and a "Build Successful" message is added in the string builder is the file was build correctly, if not a "Build failed" message is added.
+
+Test the function: The function was tested by adding several programs to the git repository, both files that could be build and not and the result was observed for every file.
+
 - listFilesForFolder
 
-The function is used to clone the project to a given directory and uses the input from the JSON (webhook) to selcet the clone url and branch to clone
--getProjectFromGIT
+The function adds all the files of the builded project correctly.
 
 - runtests
 
@@ -45,9 +45,19 @@ The function runs the builded test files of the project. The test files has to h
 
 Test the function: The function was tested with different test-files as input, these test files include for example HelloWorldTest which is a file that will use both the output stream and the error-stream due to an exception and errorTest that is a function that never returns due to an error. 
 - jsonParser
-- isJsonString
-- toFile
+
+The function retrieves "clone_url", "branch", "email", and "sha" from a JSON-formatted string received from a GitHub webhook.
+
+Test the function: The function was tested with exampleJSON.txt, observations were made on how the function handled the file and if the output was as expected.
+- writeToFile
+
+The function writes build history to a local file (buildHistory.txt) in JSON format.
+
 - getProjectFromGIT
+
+The function grabs the correct project from git depending on which branch the change were made in.
+
+Test the function: The function was tested by doing several commits to different branches and observe weather the correct branch was run through the CI server for every commit.
 
 ### SendMail
 
@@ -66,6 +76,6 @@ Test the function: The function was tested with different test-files as input, t
 # Contributions
 
  - Stina- runtests, test files
- - Martin- build, listFilesForFolder, webhook, test file, getProjectFromGIT
+ - Martin- build, listFilesForFolder, webhook, test file
  - Nicolai- sendMail, ngrok
  - Aditya- JSON parser, build history, test files
