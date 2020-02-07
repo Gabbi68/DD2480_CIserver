@@ -30,8 +30,15 @@ Create a server object, use the server method setHandler with ContinuousIntegrat
 ### Main
 
 (WRITE HOW THE FUCTIONS WORKS AND HOW THEY ARE TESTED)
+The build function take a source directory as in input, it then utilize the listfiles() function to added to a gobal variable array that it loops through and builds each file in the project.
 - build
+
+Takes a souce directory and finds every .java file in the given directory.
 - listFilesForFolder
+
+The function is used to clone the project to a given directory and uses the input from the JSON (webhook) to selcet the clone url and branch to clone
+-getProjectFromGIT
+
 - runtests
 
 The function runs the builded test files of the project. The test files has to have the name "test" in them to be run. Every file is executed and the output from the files is saved in a string builder, this includes both information about the test cases and information of a possible error message. For every file a process is created and run with exec.
@@ -59,6 +66,6 @@ Test the function: The function was tested with different test-files as input, t
 # Contributions
 
  - Stina- runtests, test files
- - Martin- build, listFilesForFolder, webhook, test file
+ - Martin- build, listFilesForFolder, webhook, test file, getProjectFromGIT
  - Nicolai- sendMail, ngrok
  - Aditya- JSON parser, build history, test files
