@@ -19,7 +19,7 @@ public class SendMail {
     // email address the mail is sent from
     //String send_from = "send_from16@mail.com";
     String send_from = "nicolai.hellesnes@gmail.com";
-    String password = "hungrigkrabbagillarsnus";
+    String password = "password";
     //String password = "password16";
     // email addresses the mail should be sent to
    // String send_to = "send_from16@mail.com";
