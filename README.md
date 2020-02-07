@@ -51,6 +51,8 @@ Test the function: The function was tested with exampleJSON.txt by observing tha
 - writeToFile
 
 Stores build information such as pusher id, commit id, and timestamp inside a JSON formatted text file. 
+Test the function: The function has been tested during development by providing sample input and validating the output.
+After intigration it has been tested with the other functions by using a test repo (HelloWorld)
 
 - getProjectFromGIT
 
