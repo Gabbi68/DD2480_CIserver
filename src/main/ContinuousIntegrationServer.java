@@ -99,6 +99,12 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         server.join();   
     }
 
+ /*
+ *
+ *Takes Source dir as string as input, this is then passed to listFilesForFolder() as a File.
+ *When the listFilesForFolder() has populated the javaFiles<> it loops thorugh and compiles every file at its current location
+ *
+ */
 
     public void build(String souceDIR){
 
@@ -141,6 +147,9 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
+ /*
+ *Takes File as input and recursivly finds every .java file and adds them to javaFiles 
+ */
     public void listFilesForFolder(File folder) {
         for (File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
@@ -210,11 +219,15 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
     }
 
+ 
+ /*
+ *Gets clone link and branch name from the webhook JSON and a static path is added when calling the function, then it will
+ *start a commandline process and run the git clone commands. 
+ */
+ 
     public void getProjectFromGIT(String cloneLink,String branchName, String storeAtPath) {
 
         String OS = System.getProperty("os.name").toLowerCase();
-
-// TODO Need A Way to catch errors
 
         if(OS.contains("win")){
             try {
