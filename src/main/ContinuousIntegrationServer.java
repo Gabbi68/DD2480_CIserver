@@ -235,8 +235,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             try {
                 Runtime rt = Runtime.getRuntime();
                 rt.exec("cmd.exe /c start git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File(System.getProperty("user.home")));
-
-                TimeUnit.SECONDS.sleep(4);
+                
+              //Needs time to clone as it is a separate process so the code keeps running while the cloning is underwa
+             System.out.println("Waiting 30 sek to clone");
+                TimeUnit.SECONDS.sleep(30);
 
             } catch (Exception e){
                 e.printStackTrace();
@@ -248,7 +250,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
                 rt.exec("git clone --branch "+ branchName + " " + cloneLink + " " + storeAtPath, null, new File(System.getProperty("user.home")));
 
                 //Needs time to clone as it is a separate process so the code keeps running while the cloning is underway
-                TimeUnit.SECONDS.sleep(4);
+                System.out.println("Waiting 30 sek to clone");
+                TimeUnit.SECONDS.sleep(30);
 
             } catch (Exception e){
                 e.printStackTrace();
