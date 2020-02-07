@@ -52,7 +52,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             }
             String tmp_str;
             tmp_str = str.toString();
-            System.out.println(tmp_str);
+            //System.out.println(tmp_str);
             jsonParser(tmp_str);
             getProjectFromGIT(clone_url, branch, "/home/nico/Downloads/build_test");
             build("/home/nico/Downloads/build_test");
@@ -68,6 +68,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             }catch(Exception e) {
                 e.printStackTrace();
             }
+            outputFromCI = new StringBuilder();
+            javaFiles.clear();
         }
         
         // here you do all the continuous integration tasks
